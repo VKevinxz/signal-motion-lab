@@ -1,0 +1,10 @@
+# Local reference and QA artifacts; the authorized capture in site/ is tracked
+/reference.html
+/qa/
+/dist/
+/.vercel/
+/node_modules/
+/__pycache__/
+*.pyc
+.env
+.env.*

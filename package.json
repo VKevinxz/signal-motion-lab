@@ -1,0 +1,15 @@
+{
+  "name": "signal-motion-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An educational web motion lab exploring scroll-driven animations, interactive navigation, canvas effects, and microinteractions inspired by Bonanza Studios.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/preview.mjs",
+    "dev": "npm run build && npm run preview"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

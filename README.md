@@ -4,6 +4,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+**Live demo:** [signal-motion-lab.vercel.app](https://signal-motion-lab.vercel.app/)
+
+[![Live demo](https://img.shields.io/badge/Live%20demo-Vercel-black?logo=vercel)](https://signal-motion-lab.vercel.app/)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FVKevinxz%2Fsignal-motion-lab)
+
 An educational web motion lab exploring scroll-driven animations, interactive navigation, canvas effects, and microinteractions inspired by [Bonanza Studios](https://www.bonanza-studios.com/). An unofficial reference study, not an official Bonanza Studios website or an independently reconstructed source-code implementation.
 
 ## What this project demonstrates

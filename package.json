@@ -10,6 +10,6 @@
     "dev": "npm run build && npm run preview"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   }
 }

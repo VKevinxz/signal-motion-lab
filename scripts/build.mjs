@@ -6,13 +6,16 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const site = path.join(root, "site"), dist = path.join(root, "dist");
 const manifest = path.join(site, "capture-manifest.json");
+console.log(`[build] Node ${process.version}, ${process.platform}, root: ${root}`);
+console.log("[build] Checking captured inputs");
 if (!fs.existsSync(path.join(site,"index.html")) || !fs.existsSync(manifest)) {
-  throw new Error("Authorized local capture missing. See README and THIRD_PARTY_NOTICES.md. Do not publish third-party materials without permission.");
+  throw new Error("Missing site/index.html or site/capture-manifest.json. Check the repository contents and Vercel Root Directory.");
 }
 const hash = value => crypto.createHash("sha256").update(value).digest("hex");
 const files = JSON.parse(fs.readFileSync(manifest,"utf8"));
 const index = Object.create(null);
 const variant = (src,w,q) => [src,w,q].join("|");
+console.log(`[build] Loaded ${files.length} manifest entries; copying static files`);
 fs.rmSync(dist,{recursive:true,force:true});
 fs.cpSync(site,dist,{recursive:true,filter:src=>!["_optimized","capture-manifest.json"].includes(path.relative(site,src).split(path.sep)[0])});
 fs.mkdirSync(path.join(dist,"_lab-images"),{recursive:true});
@@ -39,6 +42,7 @@ function resolve(raw) {
   const source=url.searchParams.get("url");
   return index[variant(source,url.searchParams.get("w"),url.searchParams.get("q"))] ?? fallback(source);
 }
+console.log(`[build] Copied ${copied} optimized variants; adapting image loader`);
 const chunks=path.join(dist,"_next/static/immutable/chunks");
 let patched=0;
 const tick=String.fromCharCode(96);
@@ -58,6 +62,7 @@ if(patched!==1) throw new Error("Expected exactly one captured Next image loader
 function walk(dir) {
   return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);
 }
+console.log("[build] Rewriting captured HTML pages");
 let pages=0, rewritten=0;
 for (const file of walk(dist).filter(x=>x.endsWith(".html"))) {
   let code=fs.readFileSync(file,"utf8");

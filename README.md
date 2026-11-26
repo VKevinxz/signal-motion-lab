@@ -63,9 +63,9 @@ Third-party material retains its original rights; the MIT license applies only t
 | Root Directory | `./` |
 | Framework Preset | Other |
 | Install Command | Empty (skip) |
-| Build Command | `npm run build` |
+| Build Command | `node scripts/build.mjs` |
 | Output Directory | `dist` |
-| Node.js | 22.x or compatible |
+| Node.js | 22.x |
 | Environment Variables | None |
 
 The root `vercel.json` defines the build, output directory, explicit static routes and security headers. The build converts captured image variants into ordinary static assets; no Next.js optimizer or backend is required. The generated preview has a visible credit link, noindex headers and a restrictive content security policy.

@@ -74,6 +74,23 @@ for (const file of walk(dist).filter(x=>x.endsWith(".html"))) {
   fs.writeFileSync(file,code);
   pages++;
 }
+// Vercel reserves _next/static/immutable for framework-managed manifests.
+// Preserve relative paths and runtime chunk loading using a non-reserved namespace.
+const originalStatic = path.join(dist,"_next","static","immutable");
+const relocatedStatic = path.join(dist,"_next","static","lab-assets");
+let relocatedReferences = 0;
+for (const file of walk(dist).filter(x=>/\.(html|js|css|json|svg|txt|map|mjs)$/i.test(x))) {
+  const original = fs.readFileSync(file,"utf8");
+  const updated = original.replace(/static\/immutable/g,()=>{relocatedReferences++;return "static/lab-assets"})
+    .replace(/static%2fimmutable/gi,()=>{relocatedReferences++;return "static%2Flab-assets"})
+    .replace(/static\\\/immutable/g,()=>{relocatedReferences++;return "static\\/lab-assets"});
+  if (updated !== original) fs.writeFileSync(file,updated);
+}
+fs.renameSync(originalStatic,relocatedStatic);
+if (walk(dist).some(file=>/(?:^|[\\/])(?:_next[\\/]static[\\/]immutable|_vercel[\\/]immutable)(?:[\\/]|$)/.test(file))) {
+  throw new Error("Reserved Vercel immutable directory remains in build output");
+}
+console.log("[build] Relocated framework assets to /_next/static/lab-assets; "+relocatedReferences+" references updated");
 fs.copyFileSync(path.join(root,"scripts/lab-notice.js"),path.join(dist,"lab-notice.js"));
 fs.writeFileSync(path.join(dist,"lab-placeholder.svg"),'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0d1012"/></svg>');
 fs.writeFileSync(path.join(dist,"robots.txt"),"User-agent: *\nDisallow: /\n");
